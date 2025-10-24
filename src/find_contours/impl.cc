@@ -19,5 +19,23 @@ std::vector<std::vector<cv::Point>> find_contours(const cv::Mat& input) {
     
     std::vector<std::vector<cv::Point>> res;
     // IMPLEMENT YOUR CODE HERE
-    return res;
+    std::vector<cv::Vec4i> hierarchy;
+    
+    cv::imshow("input", input);
+
+    cv::Mat gray, bin;
+    cv::cvtColor(input, gray, cv::COLOR_BGR2GRAY);
+    cv::threshold(gray, bin, 128, 255, cv::THRESH_BINARY);
+
+    cv::findContours(bin, res, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
+    std::vector<std::vector<cv::Point>> innermost;
+    for(size_t i = 0; i < res.size(); i++)
+    {
+        if(hierarchy[i][2] == -1)
+        {
+            innermost.push_back(res[i]);
+        }
+    }
+    cv::drawContours(bin, innermost, -1, cv::Scalar(0,255,0),2);
+    return innermost;
 }

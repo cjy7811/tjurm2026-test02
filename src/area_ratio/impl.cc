@@ -13,5 +13,9 @@ float compute_area_ratio(const std::vector<cv::Point>& contour) {
      * 通过条件:
      * 运行测试点，通过即可。
      */
-    return 0.f;
+    double contour_area = cv::contourArea(contour);
+    cv::RotatedRect rrect = cv::minAreaRect(contour);
+    double rrect_area = rrect.size.width * rrect.size.height;
+    if(rrect_area == 0.0) return 0.f;
+    return (float)contour_area / rrect_area;
 }
